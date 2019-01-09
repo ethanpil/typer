@@ -1,0 +1,166 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+      <title>Typer</title>
+      <meta name="description" content="Typer: Plain text editor for modern browsers.">
+      <script language="JavaScript" type="text/javascript">
+         var default_text = "You may begin typing in this area at any time. Once you are complete, press the Download button on the bottom left to save the file onto your computer, then contact your proctor.";
+         var doWarn = 1;
+      </script>
+			<style>
+			body {
+			  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+				background: #eee;
+				color: #000000;
+				margin: 0;
+				
+			}
+			#text {
+				border: 2px solid rgb(0, 0, 0); 
+				width: 1440px; 
+				height: 641px;
+				margin: 0 auto;
+    		display: block;
+    		font-size: 15px;
+			}
+			button {
+				text-align:center;
+				font-size: 16px;
+			}
+			#buttons {
+				display: block;
+				margin: 0 auto;
+				text-align: center;
+			}
+			</style>
+   </head>
+   <body onload="document.textform.text.focus();" onbeforeunload="return KeepOnPage()">
+      <form action="#" method="post" name="textform" id="textform">
+         <textarea cols="100" rows="30" name="text" id="text" onclick="if(document.textform.text.value==default_text)document.textform.text.value=&#39;&#39;" onkeydown="return insertTab(event,this);" onkeyup="countWords(); return insertTab(event,this);" onkeypress="return insertTab(event,this); " autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">You may begin typing in this area at any time. Once you are complete, press the Download button on the bottom left to save the file onto your computer, then contact your proctor.</textarea>
+         &nbsp;
+         <div id="buttons">
+         	<label for="YourName">Your Name:</label> <input type="text" name="YourName" id="YourName" value="" title="Your Name:">
+         	<input type="button" name="Save" id="Save" value="Save" title="Save" onclick="download()">
+         	Word Count: <span id="wc">0</span>
+     		</div>
+      </form>
+      <script type="text/javascript">
+					/*
+					document.onkeyup = function(e) {
+						  //Ctrl + Alt + Shift + U
+						 if (e.ctrlKey && e.altKey && e.shiftKey && e.which == 85) {
+						    alert("Ctrl + Alt + Shift + U shortcut combination was pressed");
+						  }
+						};
+					*/
+					function countWords() {
+					    var formcontent = document.textform.text.value;
+					    formcontent = formcontent.match(/[\w\d\\'-]+/gi);
+					    document.getElementById("wc").textContent=(formcontent ? formcontent.length : 0);
+					    //alert("Word Count:\n\nYour document contains about\n\n" + formcontent.length + " Words");
+					}
+					
+					
+					function insertTab(event, obj) {
+					    var tabKeyCode = 9;
+					    if (event.which)
+					        var keycode = event.which;
+					    else
+					        var keycode = event.keyCode;
+					    if (keycode == tabKeyCode) {
+					        if (event.type == "keydown") {
+					            if (obj.setSelectionRange) {
+					                var s = obj.selectionStart;
+					                var e = obj.selectionEnd;
+					                obj.value = obj.value.substring(0, s) +
+					                    "\t" + obj.value.substr(e);
+					                obj.setSelectionRange(s + 1, s + 1);
+					                obj.focus();
+					            } else if (obj.createTextRange) {
+					                document.selection.createRange().text = "\t"
+					                obj.onblur = function() {
+					                    this.focus();
+					                    this.onblur = null;
+					                };
+					            } else {}
+					        }
+					        if (event.returnValue)
+					            event.returnValue = false;
+					        if (event.preventDefault)
+					            event.preventDefault();
+					        return false;
+					    }
+					    return true;
+					}
+				
+					function sizeIt()
+					{
+						var agent = navigator.userAgent.toLowerCase();
+						//for msie
+						if(agent.indexOf("msie") !== -1)
+						{
+							bwidth=document.body.offsetWidth;
+							bheight=document.body.offsetHeight;
+							document.forms[0].elements[0].style.width = (bwidth-20);
+							document.forms[0].elements[0].style.height = (bheight-40);
+						}
+						//for mozilla + others
+						else
+						{
+							bwidth=innerWidth;
+							bheight=innerHeight;
+							document.forms[0].elements[0].style.width = (bwidth-50);
+							document.forms[0].elements[0].style.height = (bheight-60);
+						}
+					
+					}
+					function trimAll(sString) {
+					    while (sString.substring(0, 1) == ' ') {
+					        sString = sString.substring(1, sString.length);
+					    }
+					    while (sString.substring(sString.length - 1, sString.length) == ' ') {
+					        sString = sString.substring(0, sString.length - 1);
+					    }
+					    return sString;
+					}
+					
+					
+					function KeepOnPage(e) {
+					    if (!e)
+					        e = window.event;
+					    if (!e)
+					        return;
+					    if (document.textform.text.value !== default_text && trimAll(document.textform.text.value) !== "") {
+					        e.cancelBubble = true;
+					        e.returnValue = 'WARNING:\n\nThis action will delete your text if you haven\'t already saved it.';
+					    }
+					    if (e.stopPropagation)
+					        e.stopPropagation();
+					}     
+						
+					const dateToString = d => `${d.getFullYear()}-${('00' + (d.getMonth() + 1)).slice(-2)}-${('00' + d.getDate()).slice(-2)}__${('00' + d.getHours()).slice(-2)}-${('00' + d.getMinutes()).slice(-2)}-${('00' + d.getSeconds()).slice(-2)}`
+	
+					function download() {
+						
+						if (document.forms.textform.YourName.value !== "" && trimAll(document.forms.textform.YourName.value) !== "") {
+	
+							filename = document.forms.textform.YourName.value+"__"+dateToString(new Date())+'.txt';
+						  var pom = document.createElement('a');
+						  pom.setAttribute('href', 'data:text/plain;charset=utf-8,' +  encodeURIComponent(document.textform.text.value));
+						  pom.setAttribute('download', filename);
+						  pom.style.display = 'none';
+						  document.body.appendChild(pom);
+						  pom.click();
+						  document.body.removeChild(pom);
+						} else {
+							alert("Please enter your name to save the document.");
+							return;
+						}
+					}
+         sizeIt();
+         window.onresize=sizeIt;
+      </script>
+      <noscript>Please activate Javascript in your browser and <a href="/" title="Refresh">revisit</a> this page.</noscript>
+   </body>
+</html>
