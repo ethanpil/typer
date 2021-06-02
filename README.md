@@ -12,6 +12,7 @@ There is no configuration required. Typer is a single, static HTML file which ca
 Simply point your browser to the URL containing Typer and you are ready to type. You can use it directly from GitHub via [Staticaly CDN](https://www.staticaly.com/) via this link: [Typer Demo](https://cdn.staticaly.com/gh/ethanpil/typer/3eec9a50/typer.html)
 
 ## Planned Features
+* Rename to *securetyper*
 * Refactor the JavaScript code.
 * Implement backup using localstorage with a key combination to load up and save old files, to prevent accidental data loss.
 
